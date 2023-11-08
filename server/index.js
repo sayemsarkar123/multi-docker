@@ -23,7 +23,15 @@ const pgClient = new Pool({
       : { rejectUnauthorized: false },
 });
 
-pgClient.on('connect', (client) => {
+pgClient.on('connect', async (client) => {
+  const res = await client.query(
+    `SELECT datname FROM pg_catalog.pg_database WHERE datname = '${keys.pgDatabase}'`
+  );
+
+  if (res.rowCount === 0) {
+    await client.query(`CREATE DATABASE "${keys.pgDatabase}";`);
+  }
+
   client
     .query('CREATE TABLE IF NOT EXISTS values (number INT)')
     .catch((err) => console.error(err));

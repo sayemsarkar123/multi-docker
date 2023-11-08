@@ -5,7 +5,6 @@ services:
     hostname: frontend
   backend:
     image: 'sayemsarkar123/multi-server'
-    hostname: backend
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
@@ -16,12 +15,10 @@ services:
       - PGPORT=$PGPORT
   worker:
     image: 'sayemsarkar123/multi-worker'
-    hostname: worker
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
   nginx:
     image: 'sayemsarkar123/multi-nginx'
-    hostname: nginx
     ports:
       - '80:80'
