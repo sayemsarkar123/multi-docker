@@ -24,17 +24,13 @@ const pgClient = new Pool({
 });
 
 pgClient.on('connect', async (client) => {
-  const res = await client.query(
-    `SELECT datname FROM pg_catalog.pg_database WHERE datname = '${keys.pgDatabase}'`
-  );
-
-  if (res.rowCount === 0) {
+  try {
     await client.query(`CREATE DATABASE "${keys.pgDatabase}";`);
-  }
 
-  client
-    .query('CREATE TABLE IF NOT EXISTS values (number INT)')
-    .catch((err) => console.error(err));
+    await client.query('CREATE TABLE IF NOT EXISTS values (number INT)');
+  } catch (error) {
+    console.err(error);
+  }
 });
 
 // Redis Client Setup
