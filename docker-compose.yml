@@ -1,46 +1,20 @@
 version: '3'
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - POSTGRES_PASSWORD=postgres
-  redis:
-    image: 'redis:latest'
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile.dev
-    restart: always
-    ports:
-      - '8080:80'
-  frontend:
-    environment:
-      - WDS_SOCKET_PORT=0
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+  client:
+    image: 'sayemsarkar123/multi-client'
   backend:
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - ./server:/app
+    image: 'sayemsarkar123/multi-backend'
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres
-      - PGPORT=5432
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
   worker:
-    build:
-      context: ./worker
-      dockerfile: Dockerfile.dev
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    image: 'sayemsarkar123/multi-worker'
+  nginx:
+    image: 'sayemsarkar123/multi-nginx'
+    ports:
+      - '80:80'
