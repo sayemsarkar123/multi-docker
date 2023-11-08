@@ -3,7 +3,7 @@ services:
   client:
     image: 'sayemsarkar123/multi-client'
   backend:
-    image: 'sayemsarkar123/multi-backend'
+    image: 'sayemsarkar123/multi-server'
     environment:
       - REDIS_HOST=$REDIS_HOST
       - REDIS_PORT=$REDIS_PORT
@@ -14,6 +14,9 @@ services:
       - PGPORT=$PGPORT
   worker:
     image: 'sayemsarkar123/multi-worker'
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
   nginx:
     image: 'sayemsarkar123/multi-nginx'
     ports:
